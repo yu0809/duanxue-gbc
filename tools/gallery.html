@@ -1,0 +1,44 @@
+<!doctype html><meta charset="utf-8"><title>art gallery</title>
+<body style="background:#2a2a33;margin:0;color:#ccc;font:11px sans-serif">
+<canvas id="screen" width="160" height="144" style="display:none"></canvas>
+<canvas id="c" style="image-rendering:pixelated"></canvas>
+<script src="../js/core.js"></script>
+<script src="../js/gfx.js"></script>
+<script src="../js/art_chars.js"></script>
+<script src="../js/art_tiles.js"></script>
+<script src="../js/art_tiles2.js"></script>
+<script src="../js/art_battle.js"></script>
+<script src="../js/art_ui.js"></script>
+<script>
+const Q = new URLSearchParams(location.search);
+const S = +(Q.get('s') || 4);
+const only = Q.get('only');
+const items = [];
+try { buildCharSprites(); } catch (e) { console.error(e); }
+if (!only || only === 'chars') for (const n in SPR) { if (Q.get('n') && !Q.get('n').split(',').includes(n)) continue;
+  const s = SPR[n];
+  items.push([n, [s.down[0], s.down[1], s.up[0], s.up[1], s.left[0], s.left[1], s.right[0]]]);
+}
+if (typeof buildTiles === 'function' && (!only || only === 'tiles')) { try { buildTiles(); } catch (e) { console.error(e); }
+  for (const n in TILE_IMG) items.push([n, [TILE_IMG[n]]]); }
+if (typeof buildBattleArt === 'function' && (!only || only === 'battle')) { try { buildBattleArt(); } catch (e) { console.error(e); }
+  for (const n in BART) items.push([n, [BART[n]]]); }
+if (typeof extraGallery === 'function') extraGallery(items, only);
+const c = document.getElementById('c'), g = c.getContext('2d');
+const W = +(Q.get('w') || 780); let x = 8, y = 8, rowH = 0;
+const pos = [];
+for (const [n, imgs] of items) {
+  let w = 0, h = 0; for (const im of imgs) { w += im.width * S + 4; h = Math.max(h, im.height * S); }
+  w = Math.max(w, n.length * 7);
+  if (x + w > W) { x = 8; y += rowH + 18; rowH = 0; }
+  pos.push([n, imgs, x, y]); x += w + 10; rowH = Math.max(rowH, h);
+}
+c.width = W; c.height = y + rowH + 30;
+g.imageSmoothingEnabled = false;
+const bg = Q.get('bg') || '#88a';
+for (const [n, imgs, px, py] of pos) {
+  let xx = px;
+  for (const im of imgs) { g.fillStyle = bg; g.fillRect(xx, py, im.width * S, im.height * S); g.drawImage(im, xx, py, im.width * S, im.height * S); xx += im.width * S + 4; }
+  g.fillStyle = '#ddd'; g.fillText(n, px, py + 12 + Math.max(...imgs.map(i => i.height * S)));
+}
+</script>

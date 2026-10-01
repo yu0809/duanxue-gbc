@@ -1,0 +1,35 @@
+<!doctype html><meta charset="utf-8"><title>bake</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap">
+<body style="background:#222;color:#ddd;font:12px monospace">
+<canvas id="c" width="900" height="500" style="image-rendering:pixelated"></canvas>
+<pre id="out"></pre>
+<script>
+const Q = new URLSearchParams(location.search);
+const jobs = JSON.parse(Q.get('jobs') || '[["断雪",40,110],["剑灵传",14,110]]');
+Promise.all(jobs.map(([t]) => document.fonts.load('40px "Ma Shan Zheng"', t))).then(() => {
+  const c = document.getElementById('c'), g = c.getContext('2d');
+  const result = {};
+  let yy = 0;
+  for (const [text, size, th] of jobs) {
+    const w = Math.ceil(size * text.length * 1.1) + 4, h = Math.ceil(size * 1.3);
+    const o = document.createElement('canvas'); o.width = w; o.height = h;
+    const x = o.getContext('2d');
+    x.font = `${size}px "Ma Shan Zheng"`; x.textBaseline = 'top'; x.fillStyle = '#000';
+    x.fillText(text, 2, Math.round(size * 0.1));
+    const d = x.getImageData(0, 0, w, h).data;
+    let rows = [];
+    for (let yy2 = 0; yy2 < h; yy2++) { let r = ''; for (let xx = 0; xx < w; xx++) r += d[(yy2 * w + xx) * 4 + 3] > th ? '#' : '.'; rows.push(r); }
+    // trim
+    while (rows.length && !rows[0].includes('#')) rows.shift();
+    while (rows.length && !rows[rows.length - 1].includes('#')) rows.pop();
+    let L = Infinity, R = 0;
+    for (const r of rows) { const a = r.indexOf('#'), b = r.lastIndexOf('#'); if (a >= 0) { L = Math.min(L, a); R = Math.max(R, b); } }
+    rows = rows.map((r) => r.slice(L, R + 1));
+    result[text + size] = rows;
+    rows.forEach((r, i) => { for (let k = 0; k < r.length; k++) if (r[k] === '#') { g.fillStyle = '#fff'; g.fillRect(k * 3, (yy + i) * 3, 3, 3); } });
+    yy += rows.length + 4;
+  }
+  window.BAKED = result;
+  document.getElementById('out').textContent = 'done';
+});
+</script>
