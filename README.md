@@ -2,6 +2,10 @@
 
 一款仿 Game Boy Color 风格的中文武侠 RPG，纯原生 JavaScript 编写，在浏览器里就能玩。
 
+<p align="center">
+  <img src="docs/screenshots/shell.png" width="300" alt="掌机外壳中的标题画面">
+</p>
+
 > 三百年前，有一位剑仙，以一柄剑，镇住了魔。
 > 后来，剑断了。
 > 再后来，就没有人记得了。
@@ -19,6 +23,21 @@
 - **完整流程**：序章到终章共 6 章、29 张地图，包括竹林迷踪、冰面滑行谜题、镇妖塔封印机关等。
 - **双结局**：收集全部 5 片「雪忆」可以看到真结局。
 - **掌机外壳**：页面画出一台掌机，带可触控的十字键和 A/B/START/SELECT；横屏设备或连接手柄时可以切换成只显示屏幕的「掌机模式」。
+
+## 游戏截图
+
+<table>
+  <tr>
+    <td align="center"><img src="docs/screenshots/title.png" width="240" alt="标题画面"><br>标题画面</td>
+    <td align="center"><img src="docs/screenshots/town.png" width="240" alt="青石镇"><br>青石镇</td>
+    <td align="center"><img src="docs/screenshots/dialogue.png" width="240" alt="翠竹林中的对话"><br>剧情对话</td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/screenshots/battle.png" width="240" alt="与灰狼妖、狐火战斗"><br>回合制战斗</td>
+    <td align="center"><img src="docs/screenshots/boss.png" width="240" alt="Boss 战：冰蛟"><br>Boss 战：冰蛟</td>
+    <td align="center"><img src="docs/screenshots/tower.png" width="240" alt="镇妖塔"><br>镇妖塔</td>
+  </tr>
+</table>
 
 ## 快速开始
 
@@ -99,7 +118,7 @@ python3 -m http.server 8000
 │   ├── dev.js          # 开发跳关点与测试辅助（不打包）
 │   └── stubs.js        # 开发期占位（不打包）
 ├── dist/               # 打包好的单文件版本
-├── docs/               # 应用图标（由 tools/make_icons.py 生成）
+├── docs/               # 应用图标（由 tools/make_icons.py 生成）与 README 截图
 └── tools/              # 构建、校验、模拟脚本
 ```
 
